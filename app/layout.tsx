@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Varela_Round } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
 
 const varela_round = Varela_Round({ weight: '400', subsets: ['latin'], variable: '--font-varela-round' })
 
@@ -19,7 +20,10 @@ export default function RootLayout({
       <head>
         <link rel="shortcut icon" href="favicon.svg" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
