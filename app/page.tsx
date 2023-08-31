@@ -12,8 +12,6 @@ import bgRain from '../public/bgRain.jpg'
 import bgSnow from '../public/bgSnow.jpg'
 import bgSun from '../public/bgSun.jpg'
 import bgThunder from '../public/bgThunder.jpg'
-import toDay from './utils/toDay'
-import toWeather from './utils/toWeather'
 import { useEffect, useState } from 'react'
 
 
@@ -29,34 +27,23 @@ export default function Home() {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       async function (position) {
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
-        try {
-          const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max&timezone=auto`
-          );
-          const data = await response.json();
-          const date: string[] = toDay(data.daily.time)
-          const weather: string[] = toWeather(data.daily.weathercode)
-          const temp = data.daily.temperature_2m_max
-          console.log(weather)
-          setDay(date);
-          setWeather(weather);
-          setTemp(temp);
-          setLoading(false);
-        } catch (error) {
-          console.log(error);
-        }
-        
+        const { latitude, longitude } = position.coords;
+        const response = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`);
+        const data = await response.json();
+
+        setDay(data.date);
+        setWeather(data.weather);
+        setTemp(data.temp);
+        setLoading(false);
       }
-    )
+    );
   }, [])
   
   return (
       <main>
         {loading ? <div className="h-screen w-screen z-50 flex justify-center items-center text-"><h1 className='text-9xl'>Loading...</h1></div> : null}
         <div className='h-screen w-screen flex justify-between items-center'>
-          <Image src={background[weather[0]]} alt='cloud' fill sizes='100vw' quality={100} style={{objectFit: 'cover', zIndex: "-1"}}/>
+          <Image src={background[weather[0]]} alt='background' fill sizes='100vw' quality={100} style={{objectFit: 'cover', zIndex: "-1"}}/>
           <div className='h-screen w-1/2 py-[6.6vh]'>
             <div className=' w-[23.83vw] h-full bg-black/25 rounded-tr-full rounded-br-full flex justify-center items-center'>
               <h1 className='text-white text-[11.64vw] tracking-tighter'>{Math.round(temp[0])}°</h1>

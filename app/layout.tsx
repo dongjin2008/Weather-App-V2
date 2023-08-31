@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${varela_round.variable}`}>
       <head>
-        <link rel="shortcut icon" href="favicon.svg" />
+        <link rel="icon" href="/favicon/favicon.svg" sizes='any' />
       </head>
       <body>
         {children}
